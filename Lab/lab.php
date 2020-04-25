@@ -1,14 +1,15 @@
 <?php 
 include_once 'DBConnector.php';
 include_once 'user.php';
-$conn = "no";
- 
+
+$cdb = new DBConnector();
+
 if (isset($_POST['btn-save'])) {
 	$first_name = $_POST['first_name'];
 	$last_name = $_POST['last_name'];
 	$city_name = $_POST['city_name'];
 	$user = new User($first_name,$last_name,$city_name);
-	$res = $user->save($conn);
+	$res = $user->save();
 
 	if ($res) {
 		echo "SUCCESS!";
@@ -18,7 +19,7 @@ if (isset($_POST['btn-save'])) {
 	
 }
 
- ?>
+?>
 
 <html>
 <head>
@@ -42,9 +43,9 @@ if (isset($_POST['btn-save'])) {
 		</table>
 	</form>
 	<?php 
-$user2 = new User("","","");
-$res = $user2->readAll($conn);
-	 ?>
+	$user2 = new User("","","");
+	$res = $user2->readAll();
+	?>
 
 </body>
 </html>
