@@ -9,6 +9,11 @@ if (isset($_POST['btn-save'])) {
 	$last_name = $_POST['last_name'];
 	$city_name = $_POST['city_name'];
 	$user = new User($first_name,$last_name,$city_name);
+	if (!$user->validateForm) {
+		$user->createFormErrorSessions();
+		header("Refresh:0");
+		die();
+	}
 	$res = $user->save();
 
 	if ($res) {
@@ -16,6 +21,7 @@ if (isset($_POST['btn-save'])) {
 	}else{
 		echo "failed :(";
 	}
+	$cdb->closeDatabase();
 	
 }
 
@@ -23,11 +29,29 @@ if (isset($_POST['btn-save'])) {
 
 <html>
 <head>
+	<script type="text/javascript" src="validate.js"></script>
+	<link rel="stylesheet" type="text/css" href="validate.css">
 	<title>LAB 1</title>
 </head>
 <body> 
-	<form method="post" action="<?=$_SERVER['PHP_SELF']?>">
+	<form name="user_details" id="user_details" onsubmit="return validateForm()" method="post" action="<?=$_SERVER['PHP_SELF']?>">
 		<table align="center">
+			<tr>
+				<td>
+					<div id="form_errors">
+						<?php 
+						session_start();
+						if (!empty($_SESSION['form_errors'])) {
+							echo "". $_SESSION['form_errors'];
+							unset($_SESSION['form_errors']);
+						}
+
+						  ?>
+						
+						
+					</div>
+				</td>
+			</tr>
 			<tr>
 				<td><input type="text" name="first_name" required placeholder="First Name"></td>
 			</tr>
@@ -45,6 +69,7 @@ if (isset($_POST['btn-save'])) {
 	<?php 
 	$user2 = new User("","","");
 	$res = $user2->readAll();
+	
 	?>
 
 </body>

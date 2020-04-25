@@ -7,7 +7,8 @@ interface Crud{
 	public function update();
 	public function removeOnee();
 	public function removeAll();
-	
+	public function validateForm();
+	public function createFormErrorSessions();
 }
 
 
