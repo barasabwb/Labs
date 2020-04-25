@@ -15,7 +15,7 @@ if (isset($_POST['btn-save'])) {
 	}else{
 		echo "failed :(";
 	}
-	closeDatabase();
+	
 }
 
  ?>

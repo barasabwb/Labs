@@ -48,7 +48,7 @@ class User implements Crud
 if (mysqli_num_rows($result) > 0) {
     // output data of each row
     while($row = mysqli_fetch_assoc($result)) {
-        echo "id: " . $row["id"]. " - Name: " . $row["first_name"]. " " . $row["last_name"]. " " . $row["user_city"]."<br>";
+        echo "id: " . $row["id"]. "  " . $row["first_name"]. " " . $row["last_name"]. " " . $row["user_city"]."<br>";
     }
 } else {
     echo "0 results";
