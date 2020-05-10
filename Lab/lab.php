@@ -8,8 +8,10 @@ if (isset($_POST['btn-save'])) {
 	$first_name = $_POST['first_name'];
 	$last_name = $_POST['last_name'];
 	$city_name = $_POST['city_name'];
-	$user = new User($first_name,$last_name,$city_name);
-	if (!$user->validateForm) {
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	$user = new User($first_name,$last_name,$city_name,$username,$password);
+	if (!$user->validateForm()) {
 		$user->createFormErrorSessions();
 		header("Refresh:0");
 		die();
@@ -62,12 +64,21 @@ if (isset($_POST['btn-save'])) {
 				<td><input type="text" name="city_name" placeholder="City name"></td>
 			</tr>
 			<tr>
+				<td><input type="text" name="username" placeholder="Username"></td>
+			</tr>
+			<tr>
+				<td><input type="password" name="password" placeholder="Password"></td>
+			</tr>
+			<tr>
 				<td><button type="submit" name="btn-save"><strong>Save</strong></button></td>
+			</tr>
+			<tr>
+				<td><a href="login.php">Login</a></td>
 			</tr>
 		</table>
 	</form>
 	<?php 
-	$user2 = new User("","","");
+	$user2 = new User("","","","","");
 	$res = $user2->readAll();
 	
 	?>

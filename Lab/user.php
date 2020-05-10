@@ -1,6 +1,7 @@
 	<?php 
 
 	include "Crud.php";
+	include "authenticator.php";
 	include_once "DBConnector.php";
 	/**
 	 * 
@@ -11,17 +12,38 @@
 		private $first_name;
 		private $last_name;
 		private $city_name;
+		private $username;
+		private $password;
 
 
 
 		
 		
-		function __construct($first_name,$last_name,$city_name)
+		function __construct($first_name,$last_name,$city_name,$username,$password)
 		{
 			
 			$this->first_name = $first_name;
 			$this->last_name = $last_name;
 			$this->city_name = $city_name;
+			$this->username = $username;
+			$this->password = $password;
+		}
+		public static function create(){
+
+			$instance = new self();
+			return $instance;
+		}
+		public function setUsername($Username){
+			$this->username = $username;
+		}
+		public function getUsername($Username){
+			return $this->username;
+		}
+		public function setpassword($password){
+			$this->password = $password;
+		}
+		public function getpassword($password){
+			return $this->password;
 		}
 		public function setUserId($user_id){
 			$this->user_id = $user_id;
@@ -36,7 +58,11 @@
 			$fn = $this->first_name;
 			$ln = $this->last_name;
 			$city = $this->city_name;
-			$res = mysqli_query($cdb->conn,"INSERT INTO user(first_name,last_name,user_city) VALUES('$fn','$ln','$city')") or die("Error".mysqli_error());
+			$uname = $this->username;
+			$this->hashPassword();
+			$pass= $this->password;
+
+			$res = mysqli_query($cdb->conn,"INSERT INTO user(first_name,last_name,user_city,username,password) VALUES('$fn','$ln','$city','$uname','$pass')") or die("Error".mysqli_error());
 
 
 			return $res;
@@ -44,16 +70,28 @@
 
 		public function readAll(){
 
-	    // $conn = mysqli_connect('localhost','root','','btc3205') or die(mysqli_error());
+	    
 			$cdb2 = new DBConnector();
 
-			$result = mysqli_query($cdb2->conn,"SELECT id,first_name,last_name,user_city FROM user") or die("Error".mysqli_error());
+			$result = mysqli_query($cdb2->conn,"SELECT * FROM user") or die("Error".mysqli_error());
 
 			if (mysqli_num_rows($result) > 0) {
-	    // output data of each row
+	    
+				echo "<table  align='center' style='border:2px solid black'>";
+				echo "<tr style='border:2px solid black'>
+                <th style='border:2px solid black'>ID</th>
+                <th style='border:2px solid black'>First Name</th>
+                <th style='border:2px solid black'>Last Name</th>
+                <th style='border:2px solid black'>User City</th>
+                <th style='border:2px solid black'>Username</th>
+                <th style='border:2px solid black'>Password</th>
+				";
 				while($row = mysqli_fetch_assoc($result)) {
-					echo "id: " . $row["id"]. "  " . $row["first_name"]. " " . $row["last_name"]. " " . $row["user_city"]."<br>";
+					echo "<tr style='border:2px solid black'>";
+					echo"<td style='border:2px solid black'>". $row["id"]."</td>" ."  " ."<td style='border:2px solid black'>" .$row["first_name"]."</td>". " " ."<td style='border:2px solid black'>". $row["last_name"]."</td>". " " ."<td style='border:2px solid black'>". $row["user_city"]."</td>"." "  ."<td style='border:2px solid black'>". $row["username"]."</td>"." " ."<td style='border:2px solid black'>". $row["password"]."</td>"."<br>";
+					echo "</tr>";
 				}
+				echo "</table>";
 			} else {
 				echo "0 results";
 			}
@@ -78,15 +116,48 @@
 			$fn = $this->first_name;
 			$ln = $this->last_name;	
 			$city = $this->city_name;
-			if ($fn=''||$ln=''||$city='') {
+			if ($fn==''||$ln==''||$city=='') {
 				return false;
-			}
-			return true;
+			}else{
+			return true;}
 		}
 		public function createFormErrorSessions(){
 			session_start();
 			$_SESSION['form_errors']="all fields are required";
 		}
+		public function hashPassword(){
+
+			$this->password = password_hash($this->password, PASSWORD_DEFAULT);
+		}
+	public function isPasswordCorrect(){
+		$cdb3 = new DBConnector();
+		$found = false;
+		$result2 = mysqli_query($cdb3->conn,"SELECT * FROM user") or die("Error".mysqli_error());
+			while($row = mysqli_fetch_assoc($result2)) {
+					if (password_verify($this->password, $row['password'])&& $this->getUsername()==$row['username']) {
+						$found=true;
+					}
+					$cdb3->closeDatabase();
+					return $found; 
+				}
+			 
+
+	}
+	public function login(){
+		if ($this->isPasswordCorrect()) {
+			header("Location:private_page.php");
+		}
+	}
+	public function createUserSession(){
+		session_start();
+		$_SESSION['username'] = $this->getUsername();
+	}
+	public function logout(){
+		session_start();
+		unset($_SESSION['username']);
+		session_destroy();
+		header("Location:lab1.php");
+	}
 	}
 
 

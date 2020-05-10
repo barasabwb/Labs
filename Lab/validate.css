@@ -1,3 +1,6 @@
-#form-errors{
+#form_errors{
 	color: red;
+}
+table,th,tr{
+	border:2px black solid;
 }
