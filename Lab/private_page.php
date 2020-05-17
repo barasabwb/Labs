@@ -1,8 +1,9 @@
 <?php  
 session_start();
 if (!isset($_SESSION['username'])) {
-	# code...
+	header("Location:login.php");
 }
+echo "welcome!".$_SESSION['username'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,7 +21,7 @@ if (!isset($_SESSION['username'])) {
 	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 	<p>Must be protected</p>
-	<a href="logout">LOGOUT</a>
+	<a href="logout.php">LOGOUT</a>
 
 </body>
 </html>

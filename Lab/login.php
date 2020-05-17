@@ -1,26 +1,30 @@
 <?php 
 include_once 'DBConnector.php';
 include_once 'user.php';
-$cdb = new DBConnector();
+    $con = new DBConnector;
+    if(isset($_POST['btn-login'])){
+    
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $instance=User::create();
+    $instance->setPassword($password);
+    $instance->setUserName($username);
+    
+    
+    
+    if($instance->isPasswordCorrect()){
+        $instance->login();
+        $con->closeDatabase();
+        $instance->createUserSession();
+    }else{
+    	
+       
+        $con->closeDatabase();
+        header("Location:login.php");
 
-if (isset($_POST['btn-login'])) {
-	$username = $_POST['username'];
-	$password = $_POST['password'];
-	$instance = User::create()->setPassword($password)->setUsername($username);
-	// $instance->setPassword($password);
-	// $instance->setUsername($username);
+    }
+    }
 
-	if (!$user->validateForm()) {
-		$instance->login();
-		$cdb->closeDabatase();
-		$instance->createUserSession();
-	}else{
-		$cdb->closeDabatase();
-		header("Location:login.php");
-
-	}
-	
-}
 
  ?>
 <!DOCTYPE html>

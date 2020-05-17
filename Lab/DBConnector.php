@@ -1,9 +1,8 @@
 <?php 
-// define('DB_Server', 'localhost');
-// define('DB_User', 'root');
-// define('DB_Pass', '');
-// define('DB_Name', 'btc3205');
-// /**
+define ('DB_SERVER','localhost');
+define ('DB_USER', 'root');
+define ('DB_PASS', '');
+define ('DB_NAME', 'btc3205');
 
 
 class DBConnector
@@ -11,12 +10,14 @@ class DBConnector
 	
 	function __construct()
 	{
-		$this->conn = mysqli_connect('localhost','root','','btc3205') or die(mysqli_error());
+		$this->conn = mysqli_connect(DB_SERVER, DB_USER, DB_PASS) or die(mysqli_error());
+		mysqli_select_db($this->conn, DB_NAME);
 		
 	}
 	public function closeDatabase(){
-		mysqli_close($this->conn);
-	}
+    mysqli_close($this->conn);
+ }
+
 }
 
 

@@ -30,19 +30,20 @@
 		}
 		public static function create(){
 
-			$instance = new self();
-			return $instance;
+			$instance = new ReflectionClass(__CLASS__);
+            return $instance->newInstanceWithoutConstructor();
+
 		}
-		public function setUsername($Username){
+		public function setUsername($username){
 			$this->username = $username;
 		}
-		public function getUsername($Username){
+		public function getUsername(){
 			return $this->username;
 		}
 		public function setpassword($password){
 			$this->password = $password;
 		}
-		public function getpassword($password){
+		public function getpassword(){
 			return $this->password;
 		}
 		public function setUserId($user_id){
@@ -85,10 +86,11 @@
                 <th style='border:2px solid black'>User City</th>
                 <th style='border:2px solid black'>Username</th>
                 <th style='border:2px solid black'>Password</th>
+                <th style='border:2px solid black'>Image Name</th>
 				";
 				while($row = mysqli_fetch_assoc($result)) {
 					echo "<tr style='border:2px solid black'>";
-					echo"<td style='border:2px solid black'>". $row["id"]."</td>" ."  " ."<td style='border:2px solid black'>" .$row["first_name"]."</td>". " " ."<td style='border:2px solid black'>". $row["last_name"]."</td>". " " ."<td style='border:2px solid black'>". $row["user_city"]."</td>"." "  ."<td style='border:2px solid black'>". $row["username"]."</td>"." " ."<td style='border:2px solid black'>". $row["password"]."</td>"."<br>";
+					echo"<td style='border:2px solid black'>". $row["id"]."</td>" ."  " ."<td style='border:2px solid black'>" .$row["first_name"]."</td>". " " ."<td style='border:2px solid black'>". $row["last_name"]."</td>". " " ."<td style='border:2px solid black'>". $row["user_city"]."</td>"." "  ."<td style='border:2px solid black'>". $row["username"]."</td>"." " ."<td style='border:2px solid black'>". $row["password"]."</td>"." " ."<td style='border:2px solid black'>". $row["image_name"]."</td>"."<br>";
 					echo "</tr>";
 				}
 				echo "</table>";
@@ -136,6 +138,7 @@
 			while($row = mysqli_fetch_assoc($result2)) {
 					if (password_verify($this->password, $row['password'])&& $this->getUsername()==$row['username']) {
 						$found=true;
+						return $found;
 					}
 					$cdb3->closeDatabase();
 					return $found; 
@@ -145,6 +148,7 @@
 	}
 	public function login(){
 		if ($this->isPasswordCorrect()) {
+			
 			header("Location:private_page.php");
 		}
 	}
@@ -156,7 +160,7 @@
 		session_start();
 		unset($_SESSION['username']);
 		session_destroy();
-		header("Location:lab1.php");
+		header("Location:lab.php");
 	}
 	}
 
