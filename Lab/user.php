@@ -14,12 +14,14 @@
 		private $city_name;
 		private $username;
 		private $password;
+		private $utc_timestamp;
+		private $offset;
 
 
 
 		
 		
-		function __construct($first_name,$last_name,$city_name,$username,$password)
+		function __construct($first_name,$last_name,$city_name,$username,$password,$utc_timestamp,$offset)
 		{
 			
 			$this->first_name = $first_name;
@@ -27,6 +29,8 @@
 			$this->city_name = $city_name;
 			$this->username = $username;
 			$this->password = $password;
+			$this->utc_timestamp = $utc_timestamp;
+			$this->offset = $offset;
 		}
 		public static function create(){
 
@@ -39,6 +43,18 @@
 		}
 		public function getUsername(){
 			return $this->username;
+		}
+		public function setUtc_timestamp($utc_timestamp){
+			$this->utc_timestamp = $utc_timestamp;
+		}
+		public function getUtc_timestamp(){
+			return $this->utc_timestamp;
+		}
+		public function setOffset($offset){
+			$this->offset = $offset;
+		}
+		public function getOffset(){
+			return $this->offset;
 		}
 		public function setpassword($password){
 			$this->password = $password;
@@ -60,10 +76,12 @@
 			$ln = $this->last_name;
 			$city = $this->city_name;
 			$uname = $this->username;
+			$utc = $this->utc_timestamp;
+			$offset=$this->offset;
 			$this->hashPassword();
 			$pass= $this->password;
 
-			$res = mysqli_query($cdb->conn,"INSERT INTO user(first_name,last_name,user_city,username,password) VALUES('$fn','$ln','$city','$uname','$pass')") or die("Error".mysqli_error());
+			$res = mysqli_query($cdb->conn,"INSERT INTO user(first_name,last_name,user_city,username,password,utcTime,offset) VALUES('$fn','$ln','$city','$uname','$pass','$utc','$offset')") or die("Error".mysqli_error());
 
 
 			return $res;
@@ -138,11 +156,12 @@
 			while($row = mysqli_fetch_assoc($result2)) {
 					if (password_verify($this->password, $row['password'])&& $this->getUsername()==$row['username']) {
 						$found=true;
-						return $found;
+						
 					}
-					$cdb3->closeDatabase();
-					return $found; 
+					
 				}
+				$cdb3->closeDatabase();
+					return $found; 
 			 
 
 	}

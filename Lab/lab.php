@@ -10,14 +10,17 @@ if (isset($_POST['btn-save'])) {
 	$last_name = $_POST['last_name'];
 	$city_name = $_POST['city_name'];
 	$username = $_POST['username'];
+	$utc_timestamp = $_POST['utc_timestamp'];
+	$offset = $_POST['time_zone_offset'];
 	$_SESSION['username']=$username;
 	$password = $_POST['password'];
 	$fileName=$_FILES['fileToUpload']['name'];
 	$fileSize=$_FILES['fileToUpload']['size'];
 	$fileType = strtolower(pathinfo($fileName,PATHINFO_EXTENSION));
 	$finalName=$_FILES['fileToUpload']['tmp_name'];
+	// echo $utc_timestamp."sth.".$offset . "". "HERE";
 
-	$user = new User($first_name,$last_name,$city_name,$username,$password);
+	$user = new User($first_name,$last_name,$city_name,$username,$password,$utc_timestamp,$offset);
 	$fileUploader = new fileUploader();
 
 	$fileUploader->setOriginalName($fileName);
@@ -68,29 +71,7 @@ if (isset($_POST['btn-save'])) {
 	}
 	$cdb->closeDatabase();
 	
-	
-	
 
-	
-
-	
-
-
-	// if (!$user->validateForm()) {
-	// 	$user->createFormErrorSessions();
-	// 	header("Refresh:0");
-	// 	die();
-	// }
-	
-
-	// if ($res ) {
-	// 	echo "SUCCESS!";
-	// }else{
-	// 	echo "failed :(";
-	// }
-	// $cdb->closeDatabase();
-
-	
 }
 
 ?>
@@ -99,6 +80,8 @@ if (isset($_POST['btn-save'])) {
 <head>
 	<script type="text/javascript" src="validate.js"></script>
 	<link rel="stylesheet" type="text/css" href="validate.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="timezone.js"></script>
 	<title>LAB 1</title>
 </head>
 <body> 
@@ -139,15 +122,20 @@ if (isset($_POST['btn-save'])) {
 				<td><input type="file" name="fileToUpload" id="fileToUpload"></td>
 			</tr>
 			<tr>
-				<td><button type="submit" name="btn-save"><strong>Save</strong></button></td>
+				<input type="hidden" name="utc_timestamp" id="utc_timestamp" >
+				<input type="hidden" name="time_zone_offset" id="time_zone_offset" >
 			</tr>
+			<tr>
+				<td><button id="setDetails" type="submit" name="btn-save"><strong>Save</strong></button></td>
+			</tr>
+
 			<tr>
 				<td><a href="login.php">Login</a></td>
 			</tr>
 		</table>
 	</form>
 	<?php 
-	$user2 = new User("","","","","");
+	$user2 = new User("","","","","","","");
 	$res = $user2->readAll();
 
 	?>
