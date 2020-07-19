@@ -18,8 +18,10 @@ Route::get('/', function () {
 });
 Route::get('/car','CarController@allcars');
 Route::get('/car/{id}','CarController@particularCar');
-Route::post('/car/new','CarController@newCar ');
-
+Route::post('/car/new','CarController@store');
+Route::get('/newcar','CarController@newCars');
+Route::resource('cars','CarController');
+Route::post('/blogs/{car}/reviews', 'ReviewsController@store');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

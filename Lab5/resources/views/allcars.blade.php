@@ -7,6 +7,8 @@
 
 </head>
 <body>
+@include('messages')
+
 <table class="table table-striped">
     <tr>
         <th>Car Id</th>
@@ -15,13 +17,14 @@
     </tr>
     @foreach($cars as $car)
         <tr>
-            <td>{{$car->id}}</td>
-            <td>{{$car->make}}</td>
-            <td>{{$car->model}}</td>
+            <td><a href="/car/{{$car->id}}">{{$car->id}}</a></td>
+            <td><a href="/car/{{$car->id}}">{{$car->make}}</a></td>
+            <td><a href="/car/{{$car->id}}">{{$car->model}}</a></td>
         </tr>
 
     @endforeach
 </table>
+<a href="/newcar">NEW CAR</a>
 
 
 </body>
