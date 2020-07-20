@@ -1,0 +1,1 @@
+Import the database below which will create a table called 'students' which has mock data to play around with.
